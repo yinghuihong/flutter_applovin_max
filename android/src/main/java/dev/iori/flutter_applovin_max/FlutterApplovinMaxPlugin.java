@@ -1,7 +1,6 @@
 package dev.iori.flutter_applovin_max;
 
 import android.app.Activity;
-
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugin.platform.PlatformViewRegistry;
 
@@ -38,25 +37,24 @@ public class FlutterApplovinMaxPlugin implements FlutterPlugin, MethodCallHandle
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        this.RegistrarBanner(flutterPluginBinding.getFlutterEngine().getPlatformViewsController().getRegistry());
+        this.RegistrarBanner(flutterPluginBinding.getPlatformViewRegistry());
         this.onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
     }
 
-    public static void registerWith(Registrar registrar) {
+    public static void registerWith(PluginRegistry.Registrar registrar) {
         if (instance == null) {
             instance = new FlutterApplovinMaxPlugin();
         }
         instance.onAttachedToEngine(registrar.context(), registrar.messenger());
     }
 
-
-    public void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
+    private void onAttachedToEngine(Context applicationContext, BinaryMessenger messenger) {
         if (channel != null) {
             return;
         }
         instance = new FlutterApplovinMaxPlugin();
         Log.i("AppLovin Plugin", "onAttachedToEngine");
-        this.context = applicationContext;
+        context = applicationContext;
         channel = new MethodChannel(messenger, "flutter_applovin_max", StandardMethodCodec.INSTANCE);
         channel.setMethodCallHandler(this);
     }
@@ -64,7 +62,7 @@ public class FlutterApplovinMaxPlugin implements FlutterPlugin, MethodCallHandle
     public FlutterApplovinMaxPlugin() {
     }
 
-    public void RegistrarBanner(PlatformViewRegistry registry) {
+    private void RegistrarBanner(PlatformViewRegistry registry) {
         registry.registerViewFactory("/Banner", new BannerFactory());
     }
 
@@ -116,11 +114,11 @@ public class FlutterApplovinMaxPlugin implements FlutterPlugin, MethodCallHandle
     }
 
     static public void Callback(final String method) {
-        if (instance.context != null && instance.channel != null && instance.activity != null) {
-            instance.activity.runOnUiThread(new Runnable() {
+        if (context != null && channel != null && activity != null) {
+            activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    instance.channel.invokeMethod(method, null);
+                    channel.invokeMethod(method, null);
                 }
             });
         } else {
@@ -130,16 +128,18 @@ public class FlutterApplovinMaxPlugin implements FlutterPlugin, MethodCallHandle
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        this.context = null;
-        this.channel.setMethodCallHandler(null);
-        this.channel = null;
+        context = null;
+        if (channel != null) {
+            channel.setMethodCallHandler(null);
+            channel = null;
+        }
     }
 
     @Override
     public void onAttachedToActivity(ActivityPluginBinding binding) {
-        this.activity = binding.getActivity();
-        instance.instanceReward = new RewardedVideo();
-        instance.instanceInter = new InterstitialVideo();
+        activity = binding.getActivity();
+        instanceReward = new RewardedVideo();
+        instanceInter = new InterstitialVideo();
         Log.i("AppLovin Plugin", "Instances created");
     }
 
@@ -149,7 +149,7 @@ public class FlutterApplovinMaxPlugin implements FlutterPlugin, MethodCallHandle
 
     @Override
     public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
-        this.activity = binding.getActivity();
+        activity = binding.getActivity();
     }
 
     @Override

@@ -5,15 +5,14 @@ version: 2.1.1
 homepage: https://github.com/ioridev/flutter_applovin_max
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.12.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter 
 
 dev_dependencies:
-  pedantic_mono: ^1.11.0+2
+  pedantic_mono: ^1.18.0
   flutter_test:
     sdk: flutter
 

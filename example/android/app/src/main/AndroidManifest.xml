@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <application tools:replace="android:label"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="flutter_applovin_max_example"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
              <meta-data android:name="applovin.sdk.key"
-            android:value=""  />
+            android:value="cgXL2JAxuZbu7wKSd0d7TvfHqoZMQVeC3CeLILO0GV-O1fiUC8V7sRhruJKxeozSP6gFyT9F2SqlM8HWqk3OKt"  />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
